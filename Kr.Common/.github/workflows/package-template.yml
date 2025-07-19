@@ -1,0 +1,41 @@
+name: Build and publish library package
+
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+  NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
+  NUGET_VERSION: ${{ secrets.NUGET_VERSION }}
+  NUGET_PACKAGE_NAME: ${{ secrets.NUGET_PACKAGE_NAME }}
+  DOTNET_VERSION: '8.0.x'
+  PROJECT_PATH: './Kr.Common.csproj' 
+  PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}/output
+
+
+jobs:  
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.PROJECT_PATH }}
+
+      - name: Build project
+        run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
+
+      - name: Pack project
+        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }} --no-build
