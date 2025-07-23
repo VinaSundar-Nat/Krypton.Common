@@ -1,4 +1,4 @@
-name: Build and publish library package
+name: Build and publish Kr.Common package
 
 on: 
   push:
@@ -20,7 +20,7 @@ env:
 
 jobs:  
   build:
-    name: Build
+    name: Build package
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -37,5 +37,25 @@ jobs:
       - name: Build project
         run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
 
-      - name: Pack project
-        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }} --no-build
+      # - name: Pack project
+      #   run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }} --no-build
+
+      - name: create package
+        id: create-package
+        uses: ./.github/actions/pack
+        with:
+          PROJECT-PATH: ${{ env.PROJECT_PATH }}
+          PROJECT-OUTPUT-DIRECTORY: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+          DOTNET-VERSION: ${{ env.DOTNET_VERSION }}
+
+      - name: publish package
+        id: publish-package
+        uses: ./.github/actions/publish
+        with:
+          NUGET_API_KEY: ${{ env.NUGET_API_KEY }}
+          NUGET_SOURCE: ${{ env.NUGET_SOURCE }}
+          NUGET_VERSION: ${{ env.NUGET_VERSION }}
+          NUGET_PACKAGE_NAME: ${{ env.NUGET_PACKAGE_NAME }}
+          PROJECT_PATH: ${{ env.PROJECT_PATH }}
+          PACKAGE_OUTPUT_DIRECTORY: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+          DOTNET_VERSION: ${{ env.DOTNET_VERSION }}
