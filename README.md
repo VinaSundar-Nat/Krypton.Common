@@ -1,2 +1,2 @@
 # Krypton.Common
-Library for shared code
+This package contains shared components for Krypton.

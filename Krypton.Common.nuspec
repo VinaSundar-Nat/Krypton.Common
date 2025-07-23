@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Kr.Common</id>
+    <version>1.0.0</version>
+    <authors>Vina Sundar</authors>
+    <description>A library with shared components for krypton</description>
+    <readme>README.md</readme>
+    <projectUrl>https://github.com/VinaSundar-Nat/Krypton.Common</projectUrl>
+    <license type="expression">MIT</license>
+    <tags>utility centralized-packages directory-packages</tags>
+    <repository>
+      <url>https://github.com/VinaSundar-Nat/Krypton.Common</url>
+    </repository>
+    <!-- Dependencies that consumers will get -->
+    <dependencies>
+      <group targetFramework="net8.0">
+        <dependency id="Microsoft.Extensions.Logging.Abstractions" version="8.0.0" />
+        <dependency id="System.Text.Json" version="8.0.0" />
+      </group>
+    </dependencies>
+  </metadata>
+  
+  <files>
+    <!-- Library assemblies -->
+    <file src="bin\Release\net8.0\Krypton.Common.dll" target="lib\net8.0" />
+    <file src="bin\Release\net8.0\Krypton.Common.xml" target="lib\net8.0" />
+
+    <!-- Build integration -->
+    <file src="Directory.Packages.props" target="build" />
+    
+    <!-- Documentation -->
+    <file src="README.md" target="" />
+  </files>
+</package>

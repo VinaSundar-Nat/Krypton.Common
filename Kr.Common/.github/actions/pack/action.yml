@@ -1,0 +1,41 @@
+name: 'Pack .NET Project  for NuGet'
+description: 'This action packs a Kr.Common project into a NuGet package.'
+
+inputs:
+  PROJECT-PATH:
+    description: 'Path to the .NET project file (e.g., ./Kr.Common.csproj)'
+    required: true
+    default: './Kr.Common.csproj'
+  PROJECT-OUTPUT-DIRECTORY:
+    description: 'Path to the .NET project output directory (e.g., ./output)'
+    required: true
+    default: './output'
+  DOTNET-VERSION:
+    description: 'Version of .NET SDK to use'
+    required: false
+    default: '8.0.x'
+
+runs:
+  using: composite
+  steps:
+    - name: Pack .NET Project
+      env:
+        DOTNET_VERSION: ${{ inputs.DOTNET-VERSION  }}
+      run: |
+        echo "Setting up .NET SDK version: $DOTNET_VERSION"
+        dotnet --version
+        dotnet pack ${{ inputs.PROJECT-PATH }} \
+        --configuration Release \
+        --no-build \
+        --output ${{ inputs.PROJECT-OUTPUT-DIRECTORY }} \
+        --verbosity normal
+      shell: bash
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Kr.Common.nupkg
+        path: ${{ inputs.PROJECT-OUTPUT-DIRECTORY }}/*.nupkg
+        if-no-files-found: error
+      shell: bash
+

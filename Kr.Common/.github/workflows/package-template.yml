@@ -1,0 +1,61 @@
+name: Build and publish Kr.Common package
+
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+  NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
+  NUGET_VERSION: ${{ secrets.NUGET_VERSION }}
+  NUGET_PACKAGE_NAME: ${{ secrets.NUGET_PACKAGE_NAME }}
+  DOTNET_VERSION: '8.0.x'
+  PROJECT_PATH: './Kr.Common.csproj' 
+  PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}/output
+
+
+jobs:  
+  build:
+    name: Build package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.PROJECT_PATH }}
+
+      - name: Build project
+        run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
+
+      # - name: Pack project
+      #   run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }} --no-build
+
+      - name: create package
+        id: create-package
+        uses: ./.github/actions/pack
+        with:
+          PROJECT-PATH: ${{ env.PROJECT_PATH }}
+          PROJECT-OUTPUT-DIRECTORY: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+          DOTNET-VERSION: ${{ env.DOTNET_VERSION }}
+
+      - name: publish package
+        id: publish-package
+        uses: ./.github/actions/publish
+        with:
+          NUGET_API_KEY: ${{ env.NUGET_API_KEY }}
+          NUGET_SOURCE: ${{ env.NUGET_SOURCE }}
+          NUGET_VERSION: ${{ env.NUGET_VERSION }}
+          NUGET_PACKAGE_NAME: ${{ env.NUGET_PACKAGE_NAME }}
+          PROJECT_PATH: ${{ env.PROJECT_PATH }}
+          PACKAGE_OUTPUT_DIRECTORY: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+          DOTNET_VERSION: ${{ env.DOTNET_VERSION }}
