@@ -50,7 +50,7 @@ jobs:
 
       - name: publish package
         id: publish-package
-        uses: ./.github/actions/publish
+        uses: ./.github/actions/nuget-publish
         with:
           NUGET_API_KEY: ${{ env.NUGET_API_KEY }}
           NUGET_SOURCE: ${{ env.NUGET_SOURCE }}

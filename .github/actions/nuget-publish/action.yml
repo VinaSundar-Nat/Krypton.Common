@@ -1,0 +1,48 @@
+name: 'Publish .NET Project to NuGet'
+description: 'This action publishes a Kr.Common project to NuGet.'
+
+inputs:
+  NUGET_API_KEY:
+    description: 'API key for NuGet package source'
+    required: true
+  NUGET_SOURCE:
+    description: 'NuGet package source URL'
+    required: true
+  NUGET_VERSION:
+    description: 'Version of the NuGet package'
+    required: true
+  NUGET_PACKAGE_NAME:
+    description: 'Name of the NuGet package'
+    required: true
+  PROJECT_PATH:
+    description: 'Path to the .NET project file (e.g., ./Kr.Common.csproj)'
+    required: true
+  PACKAGE_OUTPUT_DIRECTORY:
+    description: 'Directory where the package will be output (e.g., ./output)'
+    required: true
+  DOTNET_VERSION:
+    description: 'Version of .NET SDK to use'
+    required: false
+    default: '8.0.x'
+
+runs:
+  using: composite
+  steps:
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ inputs.DOTNET_VERSION }}
+    - name: Push to NuGet
+      env:
+        NUGET_API_KEY: ${{ inputs.NUGET_API_KEY }}
+        NUGET_SOURCE: ${{ inputs.NUGET_SOURCE }}
+        NUGET_VERSION: ${{ inputs.NUGET_VERSION }}
+        NUGET_PACKAGE_NAME: ${{ inputs.NUGET_PACKAGE_NAME }}
+      run: |
+        echo "Setting up .NET SDK version: ${{ inputs.DOTNET_VERSION }}"
+        dotnet --version
+        dotnet nuget push ${{ inputs.PACKAGE_OUTPUT_DIRECTORY }}/${{ inputs.NUGET_PACKAGE_NAME }}.${{ inputs.NUGET_VERSION }}.nupkg \
+          --source ${{ env.NUGET_SOURCE }} \
+          --api-key ${{ env.NUGET_API_KEY }} \
+          --skip-duplicate
+      shell: bash
