@@ -5,7 +5,7 @@ inputs:
   PROJECT-PATH:
     description: 'Path to the .NET project file (e.g., ./Kr.Common.csproj)'
     required: true
-    default: './Kr.Common.csproj'
+    default: './Kr.Common/Kr.Common.csproj'
   PROJECT-OUTPUT-DIRECTORY:
     description: 'Path to the .NET project output directory (e.g., ./output)'
     required: true
@@ -42,14 +42,15 @@ runs:
       run: |
         echo "Setting up .NET SDK version: $DOTNET_VERSION"
         dotnet --version
-        echo "Packing using nuspec file: ${{ inputs.NUSPEC-FILE }}"
         echo "Package version: $NUGET_VERSION"
         
-        nuget pack ${{ inputs.NUSPEC-FILE }} \
-          -OutputDirectory ${{ inputs.PROJECT-OUTPUT-DIRECTORY }} \
-          -Version $NUGET_VERSION \
-          -Verbosity normal \
-          -NonInteractive
+        dotnet pack ${{ inputs.PROJECT-PATH }} \
+          --configuration Release \
+          --no-build \
+          --output ${{ inputs.PROJECT-OUTPUT-DIRECTORY }} \
+          --verbosity normal \
+          -p:PackageVersion=$NUGET_VERSION \
+          -p:Version=$NUGET_VERSION
       shell: bash
 
     - name: List generated packages
