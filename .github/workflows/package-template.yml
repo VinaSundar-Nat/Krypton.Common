@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - main
-  # pull_request:
-  #   branches:
-  #     - main
+  pull_request:
+    branches:
+      - main
 
 env:
   NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
@@ -35,6 +35,9 @@ jobs:
         uses: ./.github/actions/extract-version
         with:
           NUSPEC-FILE: ${{ env.NUSPEC_FILE }}
+
+      - name: Print package version
+        run: echo "Package version is ${{ steps.extract-version.outputs.version }}"
 
       - name: Restore dependencies
         run: dotnet restore ${{ env.PROJECT_PATH }}

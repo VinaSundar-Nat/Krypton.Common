@@ -7,6 +7,11 @@ inputs:
     required: false
     default: './Krypton.Common.nuspec'
 
+outputs:
+  version:
+    description: 'Extracted version from nuspec'
+    value: ${{ steps.extract-version.outputs.version }}
+
 runs:
   using: composite
   steps:
