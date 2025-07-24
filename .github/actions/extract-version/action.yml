@@ -1,0 +1,19 @@
+name: 'Extract publish version'
+description: 'This action extract nuget package version from nuspec file.'
+
+inputs:
+  NUSPEC-FILE:
+    description: 'Path to the nuspec file (e.g., ./Krypton.Common.nuspec)'
+    required: false
+    default: './Krypton.Common.nuspec'
+
+runs:
+  using: composite
+  steps:
+    - name: Extract version from nuspec
+      id: extract-version
+      run: |
+        VERSION=$(grep -oP '<version>\K[^<]+' ${{ inputs.NUSPEC-FILE }})
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Extracted version from nuspec: $VERSION"
+      shell: bash
