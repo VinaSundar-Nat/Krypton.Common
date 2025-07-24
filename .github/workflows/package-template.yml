@@ -4,16 +4,16 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+  # pull_request:
+  #   branches:
+  #     - main
 
 env:
   NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
   NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
   NUGET_PACKAGE_NAME: 'Krypton.Common'
   DOTNET_VERSION: '8.0.x'
-  PROJECT_PATH: './Kr.Common.csproj' 
+  PROJECT_PATH: './Kr.Common/Kr.Common.csproj' 
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}/output
   NUSPEC_FILE: './Krypton.Common.nuspec'
 
