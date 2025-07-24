@@ -1,4 +1,4 @@
-name: 'Pack .NET Project  for NuGet'
+name: 'Pack .NET Project for NuGet'
 description: 'This action packs a Kr.Common project into a NuGet package.'
 
 inputs:
@@ -14,21 +14,48 @@ inputs:
     description: 'Version of .NET SDK to use'
     required: false
     default: '8.0.x'
+  NUSPEC-FILE:
+    description: 'Path to the nuspec file (e.g., ./Krypton.Common.nuspec)'
+    required: false
+    default: './Krypton.Common.nuspec'
+  NUGET-VERSION:
+    description: 'Version of the NuGet package'
+    required: true
 
 runs:
   using: composite
   steps:
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: 'latest'
+
+    - name: Create output directory
+      run: |
+        mkdir -p ${{ inputs.PROJECT-OUTPUT-DIRECTORY }}
+      shell: bash
+
     - name: Pack .NET Project
       env:
-        DOTNET_VERSION: ${{ inputs.DOTNET-VERSION  }}
+        DOTNET_VERSION: ${{ inputs.DOTNET-VERSION }}
+        NUGET_VERSION: ${{ inputs.NUGET-VERSION }}
       run: |
         echo "Setting up .NET SDK version: $DOTNET_VERSION"
         dotnet --version
-        dotnet pack ${{ inputs.PROJECT-PATH }} \
-        --configuration Release \
-        --no-build \
-        --output ${{ inputs.PROJECT-OUTPUT-DIRECTORY }} \
-        --verbosity normal
+        echo "Packing using nuspec file: ${{ inputs.NUSPEC-FILE }}"
+        echo "Package version: $NUGET_VERSION"
+        
+        nuget pack ${{ inputs.NUSPEC-FILE }} \
+          -OutputDirectory ${{ inputs.PROJECT-OUTPUT-DIRECTORY }} \
+          -Version $NUGET_VERSION \
+          -Verbosity normal \
+          -NonInteractive
+      shell: bash
+
+    - name: List generated packages
+      run: |
+        echo "Generated packages:"
+        ls -la ${{ inputs.PROJECT-OUTPUT-DIRECTORY }}
       shell: bash
 
     - name: Upload Artifacts
@@ -37,5 +64,3 @@ runs:
         name: Kr.Common.nupkg
         path: ${{ inputs.PROJECT-OUTPUT-DIRECTORY }}/*.nupkg
         if-no-files-found: error
-      shell: bash
-
