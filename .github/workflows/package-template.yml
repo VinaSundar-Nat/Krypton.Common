@@ -36,6 +36,9 @@ jobs:
         with:
           NUSPEC-FILE: ${{ env.NUSPEC_FILE }}
 
+      - name: Print package version
+        run: echo "Package version is ${{ steps.extract-version.outputs.version }}"
+
       - name: Restore dependencies
         run: dotnet restore ${{ env.PROJECT_PATH }}
 
