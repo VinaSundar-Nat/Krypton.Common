@@ -1,5 +1,7 @@
 using System;
+using System.Linq.Expressions;
 using System.Reflection;
+using Kr.Common.Extensions;
 using Kr.Common.Infrastructure.Datastore.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -86,5 +88,5 @@ public static class DbExtensions
         });
     }
 
-    public static int PageTo(this int index, int take) => (index - 1) * take;
+    public static int PageTo(this int index, int take) => (index - 1) * take;   
 }
