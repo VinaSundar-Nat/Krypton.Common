@@ -19,6 +19,6 @@ public enum FilterOperation
     LessThanOrEqual
 }
 
-public sealed record DbFilter<T>(string Property, T Value, FilterOperation Operation);
+public sealed record DbFilter<T>(string Property, T? Value, FilterOperation Operation);
 
 
