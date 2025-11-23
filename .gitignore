@@ -410,3 +410,5 @@ ASALocalRun/
 # keys
 .volume/
 .cert/.files/
+
+.vscode/
