@@ -23,7 +23,7 @@ inputs:
   DOTNET_VERSION:
     description: 'Version of .NET SDK to use'
     required: false
-    default: '8.0.x'
+    default: '10.0.x'
 
 runs:
   using: composite
