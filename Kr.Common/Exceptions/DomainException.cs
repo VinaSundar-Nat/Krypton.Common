@@ -23,17 +23,17 @@ public class DomainValidationException : ValidationException
 
 
 [Implementor("InternalServerException")]
-public class DomainServerException(Exception ex, string message, string customMessage = null) : Exception(message, ex)
+public class DomainServerException(Exception ex, string message, string? customMessage = null) : Exception(message, ex)
 {
-    public string CustomMessage { get; private init; } = customMessage;
+    public string? CustomMessage { get; private init; } = customMessage;
 }
 
 [Implementor("UnauthorizedException")]
 public class DomainUnauthorizedException : Exception
 {
-    public string CustomMessage { get; private init; }
+    public string? CustomMessage { get; private init; }
 
-    public DomainUnauthorizedException(Exception ex, string message, string customMessage = null)
+    public DomainUnauthorizedException(Exception ex, string message, string? customMessage = null)
         : base(message, ex)
     {
         CustomMessage = customMessage;

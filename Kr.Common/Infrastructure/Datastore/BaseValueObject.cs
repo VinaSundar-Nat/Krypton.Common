@@ -23,18 +23,17 @@ public abstract class BaseValueObject : IEquatable<BaseValueObject>
     }
 
     public override int GetHashCode()
-    {
-        var hashVal = new Func<int, object, int>((hashCode, val) =>
-        {
-            var curHash = val?.GetHashCode() ?? 0;
-            return hashCode * new Random().Next() + curHash;
-        });
-
+    {      
         unchecked
         {
             return GetEqualityComponents()
                     .Select(x => x?.GetHashCode() ?? 0)
                     .Aggregate((x, y) => (x * 17) ^ y);
         }
+    }
+
+    public BaseValueObject? GetCopy()
+    {
+        return this.MemberwiseClone() as BaseValueObject;
     }
 }
