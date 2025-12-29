@@ -11,11 +11,11 @@ public abstract partial class HttpBase<ErrorHandler>
         => await this.ExecutePostAsync<Request, TResponse>(httpRequest)
                  .ConfigureAwait(false);
 
-    protected async Task<HttpPostDataResponse<TResponse, TMetaData>> Post<Request, TResponse, TMetaData>
+    protected async Task<ApiSuccessResponseWithMetadata<TResponse, TMetaData>> Post<Request, TResponse, TMetaData>
         (HttpPostRequest<Request> request)
         where TMetaData : class, new()
     {
-        var response = new HttpPostDataResponse<TResponse, TMetaData>();
+        var response = new ApiSuccessResponseWithMetadata<TResponse, TMetaData>();
         response.Data = await this.ExecutePostAsync<Request, TResponse>(request,
             (responseMsg) => GetMetaData<TMetaData>(responseMsg, response.MetaData)).ConfigureAwait(false);
 

@@ -14,21 +14,33 @@ public class ApiResponse
     public required string Url { get; init; }
 }
 
+public class HttpPostRequest<Request>
+{
+    public required string Url { get; init; }
+    public Request? RequestData { get; init; }
+    public string? Version { get; init; }
+    public Dictionary<string, string>? Headers { get; init; } = default;
+    public CancellationToken Token { get; init; } = default;
+}
+
 public sealed class ApiSuccessResponse<T> : ApiResponse
 {
 
     public required T? Data { get; init; }
 }
 
-public sealed class ApiSuccessResponseWithMetadata<Response, TMetaData> : ApiResponse
+public sealed class ApiSuccessResponseWithMetadata<Response, TMetaData> 
     where TMetaData : class, new()
 {
+    public int? StatusCode { get; set; }
+    public string? Url { get; set; }
+
     public ApiSuccessResponseWithMetadata()
     {
         MetaData = new TMetaData();
     }
 
-    public required Response? Data { get; init; }
+    public Response? Data { get; set; }
     public TMetaData? MetaData { get; set; }
 }
 
