@@ -1,4 +1,5 @@
 using FluentValidation;
+using Kr.Common.Exceptions;
 
 namespace Kr.Common.Mediator;
 
@@ -36,9 +37,9 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
             .Where(f => f != null)
             .ToList();
 
-        if (failures.Any())
+        if (failures.Count != 0)
         {
-            throw new ValidationException(failures);
+            throw new DomainValidationException($"Validation failed for {typeof(TRequest).Name}", failures);
         }
 
         return await next();
