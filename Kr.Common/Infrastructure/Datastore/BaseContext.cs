@@ -19,24 +19,4 @@ public abstract class BaseContext<T>(DbContextOptions<T> options,
     }
 
     public abstract Task NotifyChanges();
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (_dbSettings?.IsValid ?? false && !optionsBuilder.IsConfigured)
-        {
-            var dbType = _dbSettings.DbType.ToEnum<DbType>();
-
-            switch (dbType)
-            {
-                case DbType.SqlServer:
-                    optionsBuilder.UseSqlServer(_dbSettings.ConnectionString);
-                    break;
-                case DbType.PostgreSQL:
-                    optionsBuilder.UseNpgsql(_dbSettings.ConnectionString);
-                    break;
-                default:
-                    throw new NotSupportedException($"Database type '{dbType}' is not supported.");
-            }
-        }
-    }
 }
